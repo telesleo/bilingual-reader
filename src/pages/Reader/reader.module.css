@@ -5,3 +5,11 @@
   align-items: start;
   gap: 20px;
 }
+
+.highlighted-text {
+  background-color: lightgray;
+}
+
+.sentence {
+  white-space: pre-line;
+}
