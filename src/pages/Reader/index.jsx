@@ -129,6 +129,8 @@ export default function Reader() {
         </p>
       </div>
       <select
+        translate="no"
+        className="notranslate"
         value={selectedVoice?.voiceURI}
         onChange={({ target }) => setSelectedVoice(
           voices.find((voice) => voice.voiceURI === target.value),
@@ -145,6 +147,8 @@ export default function Reader() {
         }
       </select>
       <button
+        translate="no"
+        className="notranslate"
         type="button"
         onClick={() => {
           if (isPlaying) stop();
