@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
 import styles from './reader.module.css';
 
@@ -34,24 +36,25 @@ export default function Reader() {
     setSentences(taggedText.split(/<end>/g));
   }, [text]);
 
-  const speak = () => {
-    const utterance = new SpeechSynthesisUtterance(text);
+  const speak = (input) => {
+    const utterance = new SpeechSynthesisUtterance(input);
     utterance.voice = selectedVoice;
     speechSynthesis.speak(utterance);
   };
 
   return (
     <div>
-      <textarea type="text" value={text} onChange={({ target }) => setText(target.value)} />
+      <textarea id={styles['text-input']} type="text" value={text} onChange={({ target }) => setText(target.value)} />
       <div id={styles['text-container']}>
         <p translate="no" className="notranslate">
           {
             sentences.map((sentence, index) => (
               <>
                 <span
+                  className={`${styles.sentence}${(highlightedSentence === index) ? ` ${styles['highlighted-text']}` : ''}`}
                   onMouseEnter={() => setHighlightedSentence(index)}
                   onMouseLeave={() => setHighlightedSentence(-1)}
-                  className={`${styles.sentence}${(highlightedSentence === index) ? ` ${styles['highlighted-text']}` : ''}`}
+                  onClick={() => speak(sentence)}
                 >
                   {sentence}
                 </span>
@@ -65,9 +68,9 @@ export default function Reader() {
             sentences.map((sentence, index) => (
               <>
                 <span
+                  className={`${styles.sentence}${(highlightedSentence === index) ? ` ${styles['highlighted-text']}` : ''}`}
                   onMouseEnter={() => setHighlightedSentence(index)}
                   onMouseLeave={() => setHighlightedSentence(-1)}
-                  className={`${styles.sentence}${(highlightedSentence === index) ? ` ${styles['highlighted-text']}` : ''}`}
                 >
                   {sentence}
                 </span>
@@ -89,7 +92,7 @@ export default function Reader() {
           ))
         }
       </select>
-      <button type="button" onClick={speak}>Speak</button>
+      <button type="button" onClick={() => speak(text)}>Speak</button>
     </div>
   );
 }
