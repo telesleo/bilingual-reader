@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
 import styles from './reader.module.css';
 
@@ -100,6 +98,11 @@ export default function Reader() {
                   onMouseEnter={() => setHighlightedSentence(index)}
                   onMouseLeave={() => setHighlightedSentence(-1)}
                   onClick={() => speak([sentence])}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') speak([sentence]);
+                  }}
+                  role="button"
+                  tabIndex={0}
                 >
                   {sentence}
                 </span>
