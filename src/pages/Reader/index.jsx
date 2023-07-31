@@ -9,6 +9,7 @@ export default function Reader() {
   const [highlightedSentence, setHighlightedSentence] = useState(-1);
   const [voices, setVoices] = useState([]);
   const [selectedVoice, setSelectedVoice] = useState();
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     function handleVoicesChanged() {
@@ -38,6 +39,11 @@ export default function Reader() {
     setSentences(taggedText.split(/<end>/g));
   }, [text]);
 
+  const stop = () => {
+    speechSynthesis.cancel();
+    setIsPlaying(false);
+  };
+
   const speak = (input) => {
     speechSynthesis.cancel();
 
@@ -48,18 +54,24 @@ export default function Reader() {
     });
 
     for (let index = utterances.length - 1; index >= 0; index -= 1) {
-      if (index < utterances.length - 1) {
-        const onEnd = () => {
-          speechSynthesis.speak(utterances[index + 1]);
-          utterances[index].removeEventListener('end', onEnd);
+      if (index === utterances.length - 1) {
+        const onLastSentenceEnd = () => {
+          stop();
+          utterances[index].removeEventListener('end', onLastSentenceEnd);
         };
-        utterances[index].addEventListener('end', onEnd);
-      }
-
-      if (index <= 0) {
-        speechSynthesis.speak(utterances[index]);
+        utterances[index].addEventListener('end', onLastSentenceEnd);
+      } else {
+        const onSentenceEnd = () => {
+          speechSynthesis.speak(utterances[index + 1]);
+          utterances[index].removeEventListener('end', onSentenceEnd);
+        };
+        utterances[index].addEventListener('end', onSentenceEnd);
       }
     }
+
+    speechSynthesis.speak(utterances[0]);
+
+    setIsPlaying(true);
   };
 
   return (
@@ -112,7 +124,15 @@ export default function Reader() {
           ))
         }
       </select>
-      <button type="button" onClick={() => speak(sentences)}>Speak</button>
+      <button
+        type="button"
+        onClick={() => {
+          if (isPlaying) stop();
+          else speak(sentences);
+        }}
+      >
+        {(isPlaying) ? 'Stop' : 'Speak'}
+      </button>
     </div>
   );
 }
