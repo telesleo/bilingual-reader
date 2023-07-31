@@ -4,7 +4,8 @@ import React, { useEffect, useState } from 'react';
 import styles from './reader.module.css';
 
 export default function Reader() {
-  const [text, setText] = useState('');
+  const [text, setText] = useState(() => localStorage.getItem('bilingual-reader-text') || '');
+
   const [sentences, setSentences] = useState([]);
   const [highlightedSentence, setHighlightedSentence] = useState(-1);
   const [voices, setVoices] = useState([]);
@@ -16,7 +17,11 @@ export default function Reader() {
       const speechSynthesisVoices = speechSynthesis.getVoices();
       if (speechSynthesisVoices.length > 0) {
         setVoices(speechSynthesisVoices);
-        setSelectedVoice(speechSynthesisVoices[0]);
+        const storedVoiceURI = localStorage.getItem('bilingual-reader-voice');
+        const storedVoice = speechSynthesisVoices.find(
+          (voice) => voice.voiceURI === storedVoiceURI,
+        );
+        setSelectedVoice(storedVoice || speechSynthesisVoices[0]);
       }
     }
 
@@ -37,7 +42,15 @@ export default function Reader() {
     taggedText = taggedText.replace(/;/g, ';<end>');
 
     setSentences(taggedText.split(/<end>/g));
+
+    localStorage.setItem('bilingual-reader-text', text);
   }, [text]);
+
+  useEffect(() => {
+    if (selectedVoice) {
+      localStorage.setItem('bilingual-reader-voice', selectedVoice.voiceURI);
+    }
+  }, [selectedVoice]);
 
   const stop = () => {
     speechSynthesis.cancel();
@@ -112,12 +125,16 @@ export default function Reader() {
           }
         </p>
       </div>
-      <select onChange={({ target }) => setSelectedVoice(voices[target.value])}>
+      <select
+        value={selectedVoice?.voiceURI}
+        onChange={({ target }) => setSelectedVoice(
+          voices.find((voice) => voice.voiceURI === target.value),
+        )}
+      >
         {
-          voices.map((voice, index) => (
+          voices.map((voice) => (
             <option
               key={voice.voiceURI}
-              value={index}
             >
               {voice.voiceURI}
             </option>
