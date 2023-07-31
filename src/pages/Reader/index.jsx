@@ -30,16 +30,36 @@ export default function Reader() {
     let taggedText = text;
 
     taggedText = taggedText.replace(/\./g, '.<end>');
-    taggedText = taggedText.replace(/,/g, '.<end>');
-    taggedText = taggedText.replace(/;/g, '.<end>');
+    taggedText = taggedText.replace(/\?/g, '?<end>');
+    taggedText = taggedText.replace(/!/g, '!<end>');
+    taggedText = taggedText.replace(/,/g, ',<end>');
+    taggedText = taggedText.replace(/;/g, ';<end>');
 
     setSentences(taggedText.split(/<end>/g));
   }, [text]);
 
   const speak = (input) => {
-    const utterance = new SpeechSynthesisUtterance(input);
-    utterance.voice = selectedVoice;
-    speechSynthesis.speak(utterance);
+    speechSynthesis.cancel();
+
+    const utterances = input.map((inputSentence) => {
+      const utterance = new SpeechSynthesisUtterance(inputSentence);
+      utterance.voice = selectedVoice;
+      return utterance;
+    });
+
+    for (let index = utterances.length - 1; index >= 0; index -= 1) {
+      if (index < utterances.length - 1) {
+        const onEnd = () => {
+          speechSynthesis.speak(utterances[index + 1]);
+          utterances[index].removeEventListener('end', onEnd);
+        };
+        utterances[index].addEventListener('end', onEnd);
+      }
+
+      if (index <= 0) {
+        speechSynthesis.speak(utterances[index]);
+      }
+    }
   };
 
   return (
@@ -54,7 +74,7 @@ export default function Reader() {
                   className={`${styles.sentence}${(highlightedSentence === index) ? ` ${styles['highlighted-text']}` : ''}`}
                   onMouseEnter={() => setHighlightedSentence(index)}
                   onMouseLeave={() => setHighlightedSentence(-1)}
-                  onClick={() => speak(sentence)}
+                  onClick={() => speak([sentence])}
                 >
                   {sentence}
                 </span>
@@ -92,7 +112,7 @@ export default function Reader() {
           ))
         }
       </select>
-      <button type="button" onClick={() => speak(text)}>Speak</button>
+      <button type="button" onClick={() => speak(sentences)}>Speak</button>
     </div>
   );
 }
