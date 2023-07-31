@@ -9,6 +9,7 @@ export default function Reader() {
   const [voices, setVoices] = useState([]);
   const [selectedVoice, setSelectedVoice] = useState();
   const [isPlaying, setIsPlaying] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
     function handleVoicesChanged() {
@@ -85,9 +86,19 @@ export default function Reader() {
     setIsPlaying(true);
   };
 
+  const toggleDarkMode = () => {
+    setDarkMode((prevDarkMode) => !prevDarkMode);
+  };
+
   return (
-    <div>
-      <textarea id={styles['text-input']} type="text" value={text} onChange={({ target }) => setText(target.value)} />
+    <div id={styles['bilingual-text-reader']} className={darkMode ? styles['dark-mode'] : ''}>
+      <textarea
+        id={styles['text-input']}
+        className={styles['voice-select']}
+        type="text"
+        value={text}
+        onChange={({ target }) => setText(target.value)}
+      />
       <div id={styles['text-container']}>
         <p translate="no" className="notranslate">
           {
@@ -128,15 +139,16 @@ export default function Reader() {
           }
         </p>
       </div>
-      <select
-        translate="no"
-        className="notranslate"
-        value={selectedVoice?.voiceURI}
-        onChange={({ target }) => setSelectedVoice(
-          voices.find((voice) => voice.voiceURI === target.value),
-        )}
-      >
-        {
+      <div>
+        <select
+          translate="no"
+          className={`${'notranslate'} ${styles['voice-select']}`}
+          value={selectedVoice?.voiceURI}
+          onChange={({ target }) => setSelectedVoice(
+            voices.find((voice) => voice.voiceURI === target.value),
+          )}
+        >
+          {
           voices.map((voice) => (
             <option
               key={voice.voiceURI}
@@ -145,18 +157,20 @@ export default function Reader() {
             </option>
           ))
         }
-      </select>
-      <button
-        translate="no"
-        className="notranslate"
-        type="button"
-        onClick={() => {
-          if (isPlaying) stop();
-          else speak(sentences);
-        }}
-      >
-        {(isPlaying) ? 'Stop' : 'Speak'}
-      </button>
+        </select>
+        <button
+          translate="no"
+          className="notranslate"
+          type="button"
+          onClick={() => {
+            if (isPlaying) stop();
+            else speak(sentences);
+          }}
+        >
+          {(isPlaying) ? 'Stop' : 'Speak'}
+        </button>
+      </div>
+      <button type="button" onClick={toggleDarkMode}>{(darkMode) ? 'Light Mode' : 'Dark Mode'}</button>
     </div>
   );
 }
