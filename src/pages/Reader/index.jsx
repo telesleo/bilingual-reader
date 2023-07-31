@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import styles from './reader.module.css';
 
 export default function Reader() {
   const [text, setText] = useState('');
@@ -30,7 +31,10 @@ export default function Reader() {
   return (
     <div>
       <input type="text" value={text} onChange={({ target }) => setText(target.value)} />
-      <p>{text}</p>
+      <div id={styles['text-container']}>
+        <p translate="no" className="notranslate">{text}</p>
+        <p>{text}</p>
+      </div>
       <select onChange={({ target }) => setSelectedVoice(voices[target.value])}>
         {
           voices.map((voice, index) => (
