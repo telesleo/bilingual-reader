@@ -139,7 +139,7 @@ export default function Reader() {
           }
         </p>
       </div>
-      <div>
+      <div id={styles['voice-container']}>
         <select
           translate="no"
           className={`${'notranslate'} ${styles['voice-select']}`}
@@ -160,7 +160,7 @@ export default function Reader() {
         </select>
         <button
           translate="no"
-          className="notranslate"
+          className={`${'notranslate'} ${styles['speak-button']}`}
           type="button"
           onClick={() => {
             if (isPlaying) stop();
@@ -170,7 +170,18 @@ export default function Reader() {
           {(isPlaying) ? 'Stop' : 'Speak'}
         </button>
       </div>
-      <button type="button" onClick={toggleDarkMode}>{(darkMode) ? 'Light Mode' : 'Dark Mode'}</button>
+      <button id={styles['dark-mode-button']} type="button" onClick={toggleDarkMode}>
+        {(darkMode) ? (
+          <span className="material-symbols-outlined">
+            light_mode
+          </span>
+        ) : (
+          <span className="material-symbols-outlined">
+            dark_mode
+          </span>
+        )}
+
+      </button>
     </div>
   );
 }
