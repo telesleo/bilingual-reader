@@ -9,7 +9,7 @@ export default function Reader() {
   const [voices, setVoices] = useState([]);
   const [selectedVoice, setSelectedVoice] = useState();
   const [isPlaying, setIsPlaying] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(JSON.parse(localStorage.getItem('bilingual-reader-dark-mode')));
 
   useEffect(() => {
     function handleVoicesChanged() {
@@ -50,6 +50,10 @@ export default function Reader() {
       localStorage.setItem('bilingual-reader-voice', selectedVoice.voiceURI);
     }
   }, [selectedVoice]);
+
+  useEffect(() => {
+    localStorage.setItem('bilingual-reader-dark-mode', darkMode);
+  }, [darkMode]);
 
   const stop = () => {
     speechSynthesis.cancel();
