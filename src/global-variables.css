@@ -1,0 +1,10 @@
+:root {
+  --background: rgb(252, 252, 252);
+  --dark-mode-background: rgb(49, 49, 49);
+  --color: rgb(13, 13, 13);
+  --dark-mode-color: rgb(243, 243, 243);
+  --color2: rgb(192, 192, 192);
+  --dark-mode-color2: rgb(143, 143, 143);
+  --highlight-color: rgb(188, 221, 228);
+  --dark-mode-highlight-color: rgb(34, 94, 105);
+}
