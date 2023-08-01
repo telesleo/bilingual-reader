@@ -2,7 +2,7 @@ body {
   background-color: var(--background);
 }
 
-#bilingual-text-reader {
+#reader {
   padding: 35px;
   display: flex;
   flex-direction: column;
@@ -13,7 +13,7 @@ body {
   min-height: 100vh;
 }
 
-.dark-mode #bilingual-text-reader {
+.dark-mode #reader {
   background-color: var(--dark-mode-background);
 }
 
@@ -147,7 +147,7 @@ body {
 /* mobile devices */
 
 @media screen and (max-width: 768px) {
-  #bilingual-text-reader {
+  #reader {
     padding: 25px;
   }
 

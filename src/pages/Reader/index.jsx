@@ -95,7 +95,7 @@ export default function Reader() {
   };
 
   return (
-    <div id={styles['bilingual-text-reader']} className={darkMode ? styles['dark-mode'] : ''}>
+    <div id={styles.reader} className={darkMode ? styles['dark-mode'] : ''}>
       <textarea
         id={styles['text-input']}
         className={styles['voice-select']}

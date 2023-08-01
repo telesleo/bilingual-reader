@@ -1,6 +1,6 @@
 {
   "short_name": "Bilingual Reader",
-  "name": "Bilingual Text Reader",
+  "name": "Bilingual Reader",
   "icons": [],
   "start_url": ".",
   "display": "standalone",
