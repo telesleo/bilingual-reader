@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Text from '../../components/Text';
 import TextInput from '../../components/TextInput';
 import '../../dark-mode.css';
 import styles from './reader.module.css';
@@ -7,7 +8,6 @@ export default function Reader() {
   const [texts, setTexts] = useState(() => localStorage.getItem('bilingual-reader-texts') || []);
   const [selectedText, setSelectedText] = useState(0);
   const [sentences, setSentences] = useState([]);
-  const [highlightedSentence, setHighlightedSentence] = useState(-1);
   const [voices, setVoices] = useState([]);
   const [selectedVoice, setSelectedVoice] = useState();
   const [isPlaying, setIsPlaying] = useState(false);
@@ -106,46 +106,7 @@ export default function Reader() {
     <div id={styles.reader} className={darkMode ? 'dark-mode' : ''}>
       <TextInput setTexts={setTexts} />
       { (texts[selectedText]) && (
-        <div id={styles['text-container']}>
-          <p translate="no" className="notranslate">
-            {
-            sentences.map((sentence, index) => (
-              <>
-                <span
-                  className={`${styles.sentence}${(highlightedSentence === index) ? ` ${styles['highlighted-text']}` : ''}`}
-                  onMouseEnter={() => setHighlightedSentence(index)}
-                  onMouseLeave={() => setHighlightedSentence(-1)}
-                  onClick={() => speak([sentence])}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter') speak([sentence]);
-                  }}
-                  role="button"
-                  tabIndex={0}
-                >
-                  {sentence}
-                </span>
-                {index !== sentences.length - 1 && ' '}
-              </>
-            ))
-          }
-          </p>
-          <p>
-            {
-            sentences.map((sentence, index) => (
-              <>
-                <span
-                  className={`${styles.sentence}${(highlightedSentence === index) ? ` ${styles['highlighted-text']}` : ''}`}
-                  onMouseEnter={() => setHighlightedSentence(index)}
-                  onMouseLeave={() => setHighlightedSentence(-1)}
-                >
-                  {sentence}
-                </span>
-                {index !== sentences.length - 1 && ' '}
-              </>
-            ))
-          }
-          </p>
-        </div>
+        <Text sentences={sentences} speak={speak} />
       ) }
       <div id={styles['voice-container']}>
         <select
@@ -188,7 +149,6 @@ export default function Reader() {
             dark_mode
           </span>
         )}
-
       </button>
     </div>
   );

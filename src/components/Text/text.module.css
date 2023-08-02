@@ -1,0 +1,26 @@
+#text-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: start;
+  gap: 20px;
+  max-width: 1000px;
+  margin: 30px auto;
+}
+
+#text-container > * {
+  flex: 1;
+  text-align: start;
+}
+
+.highlighted-text {
+  background-color: var(--highlight-color);
+}
+
+.sentence {
+  white-space: pre-line;
+}
+
+:global(.dark-mode) .highlighted-text {
+  background-color: var(--dark-mode-highlight-color);
+}
