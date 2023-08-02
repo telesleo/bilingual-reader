@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import styles from './reader.module.css';
 
 export default function Reader() {
-  const [text, setText] = useState(() => localStorage.getItem('bilingual-reader-text') || '');
-
+  const [newText, setNewText] = useState('');
+  const [texts, setTexts] = useState(() => localStorage.getItem('bilingual-reader-texts') || []);
+  const [selectedText, setSelectedText] = useState(0);
   const [sentences, setSentences] = useState([]);
   const [highlightedSentence, setHighlightedSentence] = useState(-1);
   const [voices, setVoices] = useState([]);
@@ -32,7 +33,9 @@ export default function Reader() {
   }, []);
 
   useEffect(() => {
-    let taggedText = text;
+    if (!texts[selectedText]) return;
+
+    let taggedText = texts[selectedText];
 
     taggedText = taggedText.replace(/\./g, '.<end>');
     taggedText = taggedText.replace(/\?/g, '?<end>');
@@ -42,8 +45,12 @@ export default function Reader() {
 
     setSentences(taggedText.split(/<end>/g));
 
-    localStorage.setItem('bilingual-reader-text', text);
-  }, [text]);
+    localStorage.setItem('bilingual-reader-text', texts);
+  }, [selectedText, texts]);
+
+  useEffect(() => {
+    setSelectedText(texts.length - 1);
+  }, [texts]);
 
   useEffect(() => {
     if (selectedVoice) {
@@ -54,6 +61,14 @@ export default function Reader() {
   useEffect(() => {
     localStorage.setItem('bilingual-reader-dark-mode', darkMode);
   }, [darkMode]);
+
+  const addText = () => {
+    if (!newText) return;
+
+    setTexts((prevTexts) => [...prevTexts, newText]);
+
+    setNewText('');
+  };
 
   const stop = () => {
     speechSynthesis.cancel();
@@ -94,18 +109,32 @@ export default function Reader() {
     setDarkMode((prevDarkMode) => !prevDarkMode);
   };
 
+  const handleTextInputKeyDown = (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      addText();
+    }
+  };
+
   return (
     <div id={styles.reader} className={darkMode ? styles['dark-mode'] : ''}>
-      <textarea
-        id={styles['text-input']}
-        className={styles['voice-select']}
-        type="text"
-        value={text}
-        onChange={({ target }) => setText(target.value)}
-      />
-      <div id={styles['text-container']}>
-        <p translate="no" className="notranslate">
-          {
+      <div id={styles['text-input-container']}>
+        <textarea
+          id={styles['text-input']}
+          className={styles['voice-select']}
+          type="text"
+          value={newText}
+          onChange={({ target }) => setNewText(target.value)}
+          onKeyDown={handleTextInputKeyDown}
+        />
+        { (newText.length > 0) && (
+          <button type="button" onClick={addText}>Add Text</button>
+        ) }
+      </div>
+      { (texts[selectedText]) && (
+        <div id={styles['text-container']}>
+          <p translate="no" className="notranslate">
+            {
             sentences.map((sentence, index) => (
               <>
                 <span
@@ -125,9 +154,9 @@ export default function Reader() {
               </>
             ))
           }
-        </p>
-        <p>
-          {
+          </p>
+          <p>
+            {
             sentences.map((sentence, index) => (
               <>
                 <span
@@ -141,8 +170,9 @@ export default function Reader() {
               </>
             ))
           }
-        </p>
-      </div>
+          </p>
+        </div>
+      ) }
       <div id={styles['voice-container']}>
         <select
           translate="no"
