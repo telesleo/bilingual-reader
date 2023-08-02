@@ -29,6 +29,10 @@ export default function TextInput({ setTexts }) {
         value={newText}
         onChange={({ target }) => setNewText(target.value)}
         onKeyDown={handleTextInputKeyDown}
+        rows={1}
+        style={{
+          height: (newText.length > 0) ? '200px' : 'inherit',
+        }}
       />
       { (newText.length > 0) && (
       <button type="button" onClick={addText}>Add Text</button>
