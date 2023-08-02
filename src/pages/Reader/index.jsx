@@ -6,7 +6,7 @@ import '../../dark-mode.css';
 import styles from './reader.module.css';
 
 export default function Reader() {
-  const [texts, setTexts] = useState(() => localStorage.getItem('bilingual-reader-texts') || []);
+  const [texts, setTexts] = useState(() => JSON.parse(localStorage.getItem('bilingual-reader-texts')) || []);
   const [selectedText, setSelectedText] = useState(0);
   const [sentences, setSentences] = useState([]);
   const [voices, setVoices] = useState([]);
@@ -47,7 +47,7 @@ export default function Reader() {
 
     setSentences(taggedText.split(/<end>/g));
 
-    localStorage.setItem('bilingual-reader-text', texts);
+    localStorage.setItem('bilingual-reader-texts', JSON.stringify(texts));
   }, [selectedText, texts]);
 
   useEffect(() => {
