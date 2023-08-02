@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import TextInput from '../../components/TextInput';
+import '../../dark-mode.css';
 import styles from './reader.module.css';
 
 export default function Reader() {
-  const [newText, setNewText] = useState('');
   const [texts, setTexts] = useState(() => localStorage.getItem('bilingual-reader-texts') || []);
   const [selectedText, setSelectedText] = useState(0);
   const [sentences, setSentences] = useState([]);
@@ -62,14 +63,6 @@ export default function Reader() {
     localStorage.setItem('bilingual-reader-dark-mode', darkMode);
   }, [darkMode]);
 
-  const addText = () => {
-    if (!newText) return;
-
-    setTexts((prevTexts) => [...prevTexts, newText]);
-
-    setNewText('');
-  };
-
   const stop = () => {
     speechSynthesis.cancel();
     setIsPlaying(false);
@@ -109,28 +102,9 @@ export default function Reader() {
     setDarkMode((prevDarkMode) => !prevDarkMode);
   };
 
-  const handleTextInputKeyDown = (event) => {
-    if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault();
-      addText();
-    }
-  };
-
   return (
-    <div id={styles.reader} className={darkMode ? styles['dark-mode'] : ''}>
-      <div id={styles['text-input-container']}>
-        <textarea
-          id={styles['text-input']}
-          className={styles['voice-select']}
-          type="text"
-          value={newText}
-          onChange={({ target }) => setNewText(target.value)}
-          onKeyDown={handleTextInputKeyDown}
-        />
-        { (newText.length > 0) && (
-          <button type="button" onClick={addText}>Add Text</button>
-        ) }
-      </div>
+    <div id={styles.reader} className={darkMode ? 'dark-mode' : ''}>
+      <TextInput setTexts={setTexts} />
       { (texts[selectedText]) && (
         <div id={styles['text-container']}>
           <p translate="no" className="notranslate">

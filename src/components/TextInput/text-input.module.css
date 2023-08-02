@@ -1,0 +1,45 @@
+#text-input-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+#text-input {
+  background-color: var(--background);
+  box-sizing: border-box;
+  resize: none;
+  max-width: 1000px;
+  width: 100%;
+  height: 100px;
+  border: 1px solid var(--color2);
+  outline: none;
+  border-radius: 7px;
+  padding: 15px;
+
+  scrollbar-width: thin;
+  scrollbar-color: var(--color2);
+}
+
+#text-input::-webkit-scrollbar {
+  width: 10px;
+}
+
+#text-input::-webkit-scrollbar-thumb {
+  background-color: var(--color2);
+  border-radius: 5px;
+}
+
+:global(.dark-mode) #text-input {
+  background-color: var(--dark-mode-background);
+  color: var(--dark-mode-color);
+  scrollbar-color: var(--dark-mode-color2);
+  border-color: var(--dark-mode-color2);
+}
+
+:global(.dark-mode) #text-input::-webkit-scrollbar-thumb {
+  background-color: var(--dark-mode-color2);
+  border-color: var(--dark-mode-color2);
+}
