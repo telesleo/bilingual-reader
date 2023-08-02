@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Text from '../../components/Text';
 import TextInput from '../../components/TextInput';
+import Voice from '../../components/Voice';
 import '../../dark-mode.css';
 import styles from './reader.module.css';
 
@@ -69,6 +70,8 @@ export default function Reader() {
   };
 
   const speak = (input) => {
+    if (input.length <= 0) return;
+
     speechSynthesis.cancel();
 
     const utterances = input.map((inputSentence) => {
@@ -106,39 +109,17 @@ export default function Reader() {
     <div id={styles.reader} className={darkMode ? 'dark-mode' : ''}>
       <TextInput setTexts={setTexts} />
       { (texts[selectedText]) && (
-        <Text sentences={sentences} speak={speak} />
+        <Text sentences={sentences} speak={speak} isPlaying={isPlaying} />
       ) }
-      <div id={styles['voice-container']}>
-        <select
-          translate="no"
-          className={`${'notranslate'} ${styles['voice-select']}`}
-          value={selectedVoice?.voiceURI}
-          onChange={({ target }) => setSelectedVoice(
-            voices.find((voice) => voice.voiceURI === target.value),
-          )}
-        >
-          {
-          voices.map((voice) => (
-            <option
-              key={voice.voiceURI}
-            >
-              {voice.voiceURI}
-            </option>
-          ))
-        }
-        </select>
-        <button
-          translate="no"
-          className={`${'notranslate'} ${styles['speak-button']}`}
-          type="button"
-          onClick={() => {
-            if (isPlaying) stop();
-            else speak(sentences);
-          }}
-        >
-          {(isPlaying) ? 'Stop' : 'Speak'}
-        </button>
-      </div>
+      <Voice
+        voices={voices}
+        selectedVoice={selectedVoice}
+        setSelectedVoice={setSelectedVoice}
+        sentences={sentences}
+        isPlaying={isPlaying}
+        speak={speak}
+        stop={stop}
+      />
       <button id={styles['dark-mode-button']} type="button" onClick={toggleDarkMode}>
         {(darkMode) ? (
           <span className="material-symbols-outlined">

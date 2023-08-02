@@ -13,31 +13,6 @@
   background-color: var(--dark-mode-background);
 }
 
-#voice-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.voice-select {
-  background-color: var(--background);
-  border-radius: 20px 0 0 20px;
-  border: 1px solid var(--color2);
-  border-right: none;
-  outline: none;
-  padding: 5px;
-}
-
-.speak-button {
-  background-color: var(--background);
-  border-radius: 0 20px 20px 0;
-  border: 1px solid var(--color2);
-  outline: none;
-  padding: 6px 16px;
-}
-
 #dark-mode-button {
   background-color: inherit;
   border: none;
@@ -45,17 +20,6 @@
 }
 
 /* dark mode */
-
-:global(.dark-mode) .voice-select {
-  background-color: var(--dark-mode-background);
-  color: var(--dark-mode-color);
-}
-
-:global(.dark-mode) .speak-button {
-  outline: none;
-  background-color: var(--dark-mode-background);
-  color: var(--dark-mode-color);
-}
 
 :global(.dark-mode) #dark-mode-button {
   color: var(--dark-mode-color);
@@ -66,18 +30,5 @@
 @media screen and (max-width: 768px) {
   #reader {
     padding: 25px;
-  }
-
-  #voice-container {
-    gap: 10px;
-  }
-
-  .voice-select {
-    border-radius: 20px;
-    border: 1px solid var(--color2);
-  }
-
-  .speak-button {
-    border-radius: 20px;
   }
 }
