@@ -6,8 +6,8 @@ import '../../dark-mode.css';
 import styles from './reader.module.css';
 
 export default function Reader() {
-  const [texts, setTexts] = useState(() => JSON.parse(localStorage.getItem('bilingual-reader-texts')) || []);
-  const [selectedText, setSelectedText] = useState(0);
+  const [texts, setTexts] = useState(() => JSON.parse(localStorage.getItem('bilingual-reader-texts')) || {});
+  const [selectedText, setSelectedText] = useState(localStorage.getItem('bilingual-reader-selected-text'));
   const [sentences, setSentences] = useState([]);
   const [voices, setVoices] = useState([]);
   const [selectedVoice, setSelectedVoice] = useState();
@@ -19,7 +19,7 @@ export default function Reader() {
       const speechSynthesisVoices = speechSynthesis.getVoices();
       if (speechSynthesisVoices.length > 0) {
         setVoices(speechSynthesisVoices);
-        const storedVoiceURI = localStorage.getItem('bilingual-reader-voice');
+        const storedVoiceURI = localStorage.getItem('bilingual-reader-selected-voice');
         const storedVoice = speechSynthesisVoices.find(
           (voice) => voice.voiceURI === storedVoiceURI,
         );
@@ -51,12 +51,16 @@ export default function Reader() {
   }, [selectedText, texts]);
 
   useEffect(() => {
-    setSelectedText(texts.length - 1);
-  }, [texts]);
+    if (!selectedText) return;
+
+    if (selectedVoice) {
+      localStorage.setItem('bilingual-reader-selected-text', selectedText);
+    }
+  }, [selectedText]);
 
   useEffect(() => {
     if (selectedVoice) {
-      localStorage.setItem('bilingual-reader-voice', selectedVoice.voiceURI);
+      localStorage.setItem('bilingual-reader-selected-voice', selectedVoice.voiceURI);
     }
   }, [selectedVoice]);
 
@@ -107,7 +111,7 @@ export default function Reader() {
 
   return (
     <div id={styles.reader} className={darkMode ? 'dark-mode' : ''}>
-      <TextInput setTexts={setTexts} />
+      <TextInput setTexts={setTexts} setSelectedText={setSelectedText} />
       { (texts[selectedText]) && (
         <Text sentences={sentences} speak={speak} isPlaying={isPlaying} />
       ) }

@@ -2,13 +2,23 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './text-input.module.css';
 
-export default function TextInput({ setTexts }) {
+export default function TextInput({ setTexts, setSelectedText }) {
   const [newText, setNewText] = useState('');
+
+  const findNextId = (texts) => {
+    const ids = Object.keys(texts);
+
+    return parseInt(ids[ids.length - 1], 10) + 1 || 0;
+  };
 
   const addText = () => {
     if (!newText) return;
 
-    setTexts((prevTexts) => [...prevTexts, newText]);
+    setTexts((prevTexts) => {
+      const id = findNextId(prevTexts);
+      setSelectedText(id);
+      return { ...prevTexts, [id]: newText };
+    });
 
     setNewText('');
   };
@@ -43,4 +53,5 @@ export default function TextInput({ setTexts }) {
 
 TextInput.propTypes = {
   setTexts: PropTypes.func.isRequired,
+  setSelectedText: PropTypes.func.isRequired,
 };
