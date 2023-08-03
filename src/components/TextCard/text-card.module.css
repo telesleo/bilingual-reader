@@ -1,0 +1,43 @@
+.text-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  max-width: 150px;
+  width: 100%;
+}
+
+.preview {
+  height: 150px;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 7px;
+  padding: 20px;
+  border: 1px solid var(--color2);
+  background-color: var(--background);
+  color: var(--color);
+}
+
+.text-preview {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.delete-button {
+  background-color: inherit;
+  border: none;
+  color: var(--color);
+}
+
+:global(.dark-mode) .preview {
+  background-color: var(--dark-mode-background);
+  color: var(--dark-mode-color);
+}
+
+:global(.dark-mode) .delete-button {
+  color: var(--dark-mode-color);
+}
+

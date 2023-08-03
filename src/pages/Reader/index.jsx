@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Text from '../../components/Text';
 import TextInput from '../../components/TextInput';
+import TextList from '../../components/TextList';
 import Voice from '../../components/Voice';
 import '../../dark-mode.css';
 import styles from './reader.module.css';
@@ -35,6 +36,8 @@ export default function Reader() {
   }, []);
 
   useEffect(() => {
+    localStorage.setItem('bilingual-reader-texts', JSON.stringify(texts));
+
     if (!texts[selectedText]) return;
 
     let taggedText = texts[selectedText];
@@ -46,8 +49,6 @@ export default function Reader() {
     taggedText = taggedText.replace(/;/g, ';<end>');
 
     setSentences(taggedText.split(/<end>/g));
-
-    localStorage.setItem('bilingual-reader-texts', JSON.stringify(texts));
   }, [selectedText, texts]);
 
   useEffect(() => {
@@ -124,6 +125,9 @@ export default function Reader() {
         speak={speak}
         stop={stop}
       />
+      {(Object.entries(texts).length > 0) && (
+        <TextList texts={texts} setTexts={setTexts} setSelectedText={setSelectedText} />
+      )}
       <button id={styles['dark-mode-button']} type="button" onClick={toggleDarkMode}>
         {(darkMode) ? (
           <span className="material-symbols-outlined">
