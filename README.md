@@ -4,6 +4,8 @@ Bilingual Reader is a web-based application designed to help users read and stud
 
 You can access the application here: https://telesleo.github.io/bilingual-reader.
 
+![Screenshot of the app](/Assets/Bilingual-Reader.png)
+
 ## How to Use
 
 Insert the text in your target language into the input field at the top of the page and load it.
